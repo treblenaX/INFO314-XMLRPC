@@ -8,6 +8,7 @@ import org.xml.sax.InputSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.*;
 
@@ -41,6 +42,7 @@ public class App {
     public static final Logger LOG = Logger.getLogger(App.class.getCanonicalName());
     private static Set<String> acceptedPaths = new HashSet<>(Arrays.asList("/RPC"));
     private static Set<String> acceptedMethods = new HashSet<>(Arrays.asList("post"));
+    private static Set<String> callMethods = new HashSet<>(Arrays.asList("add", "subtract", "multiply", "divide", "modulo"));
 
     public static void main(String[] args) throws Exception {
         LOG.info("Starting up on port 8080");
@@ -58,10 +60,25 @@ public class App {
 
         // this is where you will want to handle incoming XML-RPC requests
         post("/RPC", (request, response) -> {
+            Object result = -1;
             String hostname = request.host();
+            Call call = extractXMLRPCCall(request.body());
+
+            try {
+                Class<?> Calc = Calc.class;
+//                System.out.println(call.name);
+                Method method = Calc.getMethod(call.name, int[].class);
+                Calc calc = new Calc();
+//                System.out.println((Object) call.args);
+                result = method.invoke(calc, (Object) call.args.stream().mapToInt(Integer::intValue).toArray());
+//                System.out.println(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             response.header("Host", hostname);
-            response.status(500); return "TBD";
+            response.status(200);
+            return result;
         });
     }
 
@@ -83,7 +100,7 @@ public class App {
 
         NodeList paramsList = paramsNode.getChildNodes();
 
-        if (paramsList.getLength() == 0) throw new Exception("No params found.");
+        if (paramsList.getLength() == 0) return new Call(name, new ArrayList<>(Arrays.asList(0)));
 
         List<Integer> valueList = new ArrayList<>();
 
