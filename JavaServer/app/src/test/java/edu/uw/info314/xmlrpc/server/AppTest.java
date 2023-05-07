@@ -8,13 +8,14 @@ import static org.junit.Assert.*;
 
 public class AppTest {
     @Test public void appCanExtractLegitCall() throws Exception {
-        String xml = //"<?xml version=\"1.0\"?>" + 
+        String xml = //"<?xml version=\"1.0\"?>" +
             "<methodCall>" +
                 "<methodName>examples.getStateName</methodName>" +
                 "<params><param><value><i4>41</i4></value></param></params>" +
             "</methodCall>";
 
         Call call = App.extractXMLRPCCall(xml);
+
         assertEquals("examples.getStateName", call.name);
         assertEquals(1, call.args.size());
     }

@@ -31,10 +31,10 @@ The XML-RPC website has complete details, but in essence, all of the information
 
 A basic scaffolded HTTP server (using the SparkJava project) is provided for you in the JavaServer directory. You are free to use this, or you can use a different project if you choose. Whatever you use, your HTTP endpoint must:
 
-* listen on port 8080
-* return a 404 for any URL other than "/RPC"
-* return a 405 (Method Not Supported) for any operation other than POST
-* the Host must reflect the hostname it is running on
+* DONE - listen on port 8080
+* DONE - return a 404 for any URL other than "/RPC"
+* DONE - return a 405 (Method Not Supported) for any operation other than POST
+* DONE - the Host must reflect the hostname it is running on
 
 Your XML-RPC endpoint must support five method names:
 
