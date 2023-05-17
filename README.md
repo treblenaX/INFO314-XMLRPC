@@ -38,15 +38,15 @@ A basic scaffolded HTTP server (using the SparkJava project) is provided for you
 
 Your XML-RPC endpoint must support five method names:
 
-* `add`: it should take zero to any number of `i4` parameters, returning one `i4` result, adding the values together. `add` with 0 parameters should return 0; `add` with 1 parameter should return that original value. Otherwise, sum all the parameters.
-* `subtract`: it should take two `i4` parameters, returning one `i4` result, subtracting the second from the first.
-* `multiply`: it should take zero to any number of `i4` parameters, returning one `i4` result, multiplying the values together. `multiply` with 0 parameters should return 1; `multiply` with 1 parameter should return that original value. Otherwise, multiply all the parameters.
-* `divide`: it should take two `i4` parameters, returning one `i4` result, dividing the first by the second. If the second parameter is a `0`, return a `faultCode` of `1` and a `faultString` of "divide by zero".
-* `modulo`: it should take two `i4` parameters, returning one `i4` result, doing the modulo (remainder) operation. If the second parameter is a `0`, return a `faultCode` of `1` and a `faultString` of "divide by zero".
+* DONE -`add`: it should take zero to any number of `i4` parameters, returning one `i4` result, adding the values together. `add` with 0 parameters should return 0; `add` with 1 parameter should return that original value. Otherwise, sum all the parameters.
+* DONE -`subtract`: it should take two `i4` parameters, returning one `i4` result, subtracting the second from the first.
+* DONE -`multiply`: it should take zero to any number of `i4` parameters, returning one `i4` result, multiplying the values together. `multiply` with 0 parameters should return 1; `multiply` with 1 parameter should return that original value. Otherwise, multiply all the parameters.
+* DONE -`divide`: it should take two `i4` parameters, returning one `i4` result, dividing the first by the second. If the second parameter is a `0`, return a `faultCode` of `1` and a `faultString` of "divide by zero".
+* DONE -`modulo`: it should take two `i4` parameters, returning one `i4` result, doing the modulo (remainder) operation. If the second parameter is a `0`, return a `faultCode` of `1` and a `faultString` of "divide by zero".
 
 To be more clear about `add` and `multiply`, an `add` of `1, 2, 3, 4` should be 1 + 2 + 3 + 4, or 10, and a `multiply` of 1, 2, 3, 4 would be 1 * 2 * 3 * 4, or 24. 
 
-If anything than an `i4` is passed to any of these endpoints, return a `faultCode` of `3` and a `faultString` of "illegal argument type".
+DONE - If anything than an `i4` is passed to any of these endpoints, return a `faultCode` of `3` and a `faultString` of "illegal argument type".
 
 ## Client rubric (3 pts)
 
@@ -66,28 +66,46 @@ In other words, `args[0]` should be the server, and `args[1]` the port. The User
 
 In addition, the client should make sure the server responds with errors appropriately:
 
-* add two very large numbers such that it triggers an overflow
-* multiply two very large numbers and trigger an overflow
-* subtract taking two string parameters should trigger illegal argument faults
-* divide any number by 0 and trigger a divide-by-zero fault
+* DONE - add two very large numbers such that it triggers an overflow
+* DONE - multiply two very large numbers and trigger an overflow
+* DONE - subtract taking two string parameters should trigger illegal argument faults
+* DONE - divide any number by 0 and trigger a divide-by-zero fault
 
 ## Interoperability rubric (2 pts)
 
 In order to ensure that your use of XML-RPC is correct, you must demonstrate that your XML-RPC client can work against another person's XML-RPC server, and similarly that another (different) person's client can work against your server. In your project's README, document which other server you interop'ed against, and which client.
 
+Client Calling Emily's Server (5/10/2022):
+
+    elbertcheng$ javac Client.java ; java Client.java 10.19.156.195 8080
+    true
+    true
+    true
+    true
+    true
+    true
+    true
+    true
+    Error: 3 - number too large
+    Error: 1 - divide by zero
+    Error: 3 - number too large
+    Error: 1 - divide by zero
+    Error: 3 - Illegal argument type
+
+Nancy's Client calling my server (5/10/2022):
+
+    elbertcheng$ java Client.java localhost 8080
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?><methodResponse><params><param><value><i4>0</i4></value></param></params></methodResponse>
+    true
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?><methodResponse><params><param><value><i4>15</i4></value></param></params></methodResponse>
+    true
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?><methodResponse><params><param><value><i4>6</i4></value></param></params></methodResponse>
+    true
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?><methodResponse><params><param><value><i4>12</i4></value></param></params></methodResponse>
+    true
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?><methodResponse><params><param><value><i4>120</i4></value></param></params></methodResponse>
+    true
+
 *Client calling another server, 1 pt. Server called by another client, 1 pt.*
 
-## A note about Gradle
 
-In the JavaServer directory, you will find a [Gradle](https://gradle.org/) project: specifically, there is a pair of files, `gradlew` and `gradlew.bat` which are shell scripts for *nix-like shells (macOS and Linux, primarily) and Windows, respectively, and use the binaries and configuration stored in the `gradle` directory to boostrap the necessary components on your machine to do a build.
-
-Breaking all of that down, what it means is that **so long as you have a recent Java SDK installed on your machine, you can just type "gradlew run" and Gradle will build and run the code**. The source is located in JavaServer/app/src/main/java/edu/uw/info314/xmlrpc/server, and most tools (like VSCode) will recognize the directory structure and treat it as a Gradle project.
-
-If this is your first experience with a Gradle project, don't stress. Just have a Terminal window open, and from the JavaServer directory, type `gradlew run` to compile-and-run the Java server code. If it fails to build, it will give you the compile errors, otherwise it will show you the running output.
-
-## Extra credit: REST (5 pts)
-
-* Write a REST calculator server
-* Create an entirely separate HTTP endpoint
-* Same five calculator operations
-* Same sort of error handling
